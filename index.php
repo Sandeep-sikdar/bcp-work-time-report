@@ -483,10 +483,12 @@
 
 <body>
     <?php
-    session_start();
+    // session_start();
     require_once(__DIR__ . '/crestcurrent.php');
 
-    // Save auth data if available
+    CRestCurrent::saveAuthData($_REQUEST);
+
+    // // Save auth data if available
     if (!empty($_REQUEST['AUTH_ID']) && !empty($_REQUEST['DOMAIN']) && !empty($_REQUEST['REFRESH_ID']) && !empty($_REQUEST['APP_SID'])) {
         $_SESSION['auth_data'] = [
             'AUTH_ID' => $_REQUEST['AUTH_ID'],
