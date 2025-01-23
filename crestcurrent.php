@@ -37,18 +37,18 @@ class CRestCurrent extends CRest
 	}
 
 	public static function saveAuthData($data)
-	{
+	{		
 		$settingsFile = __DIR__ . '/settings.json';
-
+	
 		// Check if the settings file exists, if not create it
 		if (!file_exists($settingsFile)) {
 			// Create an empty JSON file
 			file_put_contents($settingsFile, json_encode([]));
 		}
-
+	
 		// Read the current settings from the file
 		$currentSettings = json_decode(file_get_contents($settingsFile), true);
-
+	
 		// Merge the new data with the current settings
 		$newSettings = array_merge($currentSettings, [
 			'access_token' => htmlspecialchars($data['AUTH_ID']),
@@ -57,8 +57,13 @@ class CRestCurrent extends CRest
 			'application_token' => htmlspecialchars($data['APP_SID']),
 			'client_endpoint' => 'https://' . htmlspecialchars($_REQUEST['DOMAIN']) . '/rest/'
 		]);
-
+	
 		// Save the new settings back to the file
 		file_put_contents($settingsFile, json_encode($newSettings));
-	}
+	
+		// Generate JavaScript to save the new settings to local storage
+		echo "<script>
+			localStorage.setItem('access_token', '" . htmlspecialchars($data['AUTH_ID']) . "');
+		</script>";
+	}	
 }

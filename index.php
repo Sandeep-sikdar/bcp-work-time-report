@@ -630,6 +630,7 @@
         let currentReport;
         let employeeWise;
         let projectWise;
+        const accessToken = localStorage.getItem('access_token');
 
         $(document).ready(function() {
             $('input[name="datefilter"]').daterangepicker({
@@ -1094,7 +1095,7 @@
 
             // Build formData object
             const formData = {
-                "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>",
+                "access_token": accessToken,
                 responsible: responsible, // Send as an array
                 creator: creator, // Send as an array
                 project: project, // Send as an array
@@ -1162,7 +1163,7 @@
                 type: 'POST', // Use POST for sending data in the body
                 contentType: 'application/json', // Set content type to JSON
                 data: JSON.stringify({
-                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>"
+                    "access_token": accessToken
                 }),
                 success: function(response) {
                     $(".loading-overlay").remove(); // Remove loading overlay
@@ -1229,7 +1230,7 @@
                 type: 'POST', // Use POST for sending data in the body
                 contentType: 'application/json', // Set content type to JSON
                 data: JSON.stringify({
-                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>"
+                    "access_token": accessToken
                 }),
                 success: function(response) {
                     $(".loading-overlay").remove(); // Remove loading overlay
