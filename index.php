@@ -483,12 +483,10 @@
 
 <body>
     <?php
-    // session_start();
+    session_start();
     require_once(__DIR__ . '/crestcurrent.php');
 
-    CRestCurrent::saveAuthData($_REQUEST);
-
-    // // Save auth data if available
+    // Save auth data if available
     if (!empty($_REQUEST['AUTH_ID']) && !empty($_REQUEST['DOMAIN']) && !empty($_REQUEST['REFRESH_ID']) && !empty($_REQUEST['APP_SID'])) {
         $_SESSION['auth_data'] = [
             'AUTH_ID' => $_REQUEST['AUTH_ID'],
@@ -511,8 +509,7 @@
     $settings = json_decode(file_get_contents(__DIR__ . '/settings.json'), true);
     ?>
     <h1 style="margin:0;">Work Time Report</h1>
-    <p>Access Token from Session: <?php echo htmlspecialchars($accessToken); ?></p>
-    <p>Access Token from Settings File: <?php echo htmlspecialchars($settings['access_token']); ?></p>    
+    <!-- <?php echo htmlspecialchars($settings['access_token']); ?> -->
 
     <form id="myForm" method="POST">
         <div class="commonFields">
@@ -633,7 +630,6 @@
         let currentReport;
         let employeeWise;
         let projectWise;
-        const accessToken = localStorage.getItem('access_token');
 
         $(document).ready(function() {
             $('input[name="datefilter"]').daterangepicker({
@@ -1098,7 +1094,7 @@
 
             // Build formData object
             const formData = {
-                "access_token": accessToken,
+                "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>",
                 responsible: responsible, // Send as an array
                 creator: creator, // Send as an array
                 project: project, // Send as an array
@@ -1110,7 +1106,7 @@
             console.log("Form Data of Search:", formData);
 
             // Define the API URL
-            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/report/';
+            const url = 'https://backend-main-les8.onrender.com/report/';
 
             // Show loading overlay
             $("body").append("<div class='loading-overlay'><div class='loading-message'>Searching...</div></div>");
@@ -1152,7 +1148,7 @@
         }
 
         function fetchAllProjects() {
-            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/task/projects';
+            const url = 'https://backend-main-les8.onrender.com/task/projects';
 
             // Show loading overlay
             document.body.insertAdjacentHTML(
@@ -1166,7 +1162,7 @@
                 type: 'POST', // Use POST for sending data in the body
                 contentType: 'application/json', // Set content type to JSON
                 data: JSON.stringify({
-                    "access_token": accessToken
+                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>"
                 }),
                 success: function(response) {
                     $(".loading-overlay").remove(); // Remove loading overlay
@@ -1219,7 +1215,7 @@
         }
 
         function fetchAllUsers() {
-            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/user/active/get';
+            const url = 'https://backend-main-les8.onrender.com/user/active/get';
 
             // Show loading overlay
             document.body.insertAdjacentHTML(
@@ -1233,7 +1229,7 @@
                 type: 'POST', // Use POST for sending data in the body
                 contentType: 'application/json', // Set content type to JSON
                 data: JSON.stringify({
-                    "access_token": accessToken
+                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>"
                 }),
                 success: function(response) {
                     $(".loading-overlay").remove(); // Remove loading overlay
