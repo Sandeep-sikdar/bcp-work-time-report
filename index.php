@@ -662,7 +662,7 @@
             // Handle form submission
             $("#saveTemplate").click(function(event) {
                 event.preventDefault(); // Prevent form submission
-                console.log('Save Template button pressed');
+                // console.log('Save Template button pressed');
                 saveTemplate();
             });
 
@@ -801,7 +801,7 @@
 
                 // Retrieve and parse the stored template to check correctness
                 const template = JSON.parse(localStorage.getItem("templates"));
-                console.log(template);
+                // console.log(template);
             }
             displayTemplates();
         }
@@ -813,7 +813,7 @@
             templateContainer.innerHTML = "";
 
             const data = JSON.parse(localStorage.getItem("templates")) || [];
-            console.log(data);
+            // console.log(data);
 
             if (data.length > 0) {
                 document.getElementById('templatesHead').style.display = 'block';
@@ -1103,7 +1103,7 @@
                 endDate: dateFinish,
             };
 
-            console.log("Form Data of Search:", formData);
+            // console.log("Form Data of Search:", formData);
 
             // Define the API URL
             const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/report/';
@@ -1120,9 +1120,9 @@
                     document.getElementById('masterReport').style.display = 'none';
 
                     //---------------------                
-                    console.log(response);
-                    console.log(response.finalDailyData);
-                    console.log(response.finalWeeklyData);
+                    // console.log(response);
+                    // console.log(response.finalDailyData);
+                    // console.log(response.finalWeeklyData);
                     displayReport(response.finalDailyData, detailedContainerId);
                     displayReport(response.finalWeeklyData, groupedContainerId);
                 }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -1148,7 +1148,7 @@
         }
 
         function fetchAllProjects() {
-            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/projects';
+            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/task/projects/';
 
             // Show loading overlay
             document.body.insertAdjacentHTML(
