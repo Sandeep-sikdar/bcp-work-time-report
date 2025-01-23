@@ -1106,7 +1106,7 @@
             console.log("Form Data of Search:", formData);
 
             // Define the API URL
-            const url = 'https://backend-main-les8.onrender.com/report/';
+            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/report/';
 
             // Show loading overlay
             $("body").append("<div class='loading-overlay'><div class='loading-message'>Searching...</div></div>");
@@ -1148,7 +1148,7 @@
         }
 
         function fetchAllProjects() {
-            const url = 'https://backend-main-les8.onrender.com/task/projects';
+            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/projects';
 
             // Show loading overlay
             document.body.insertAdjacentHTML(
@@ -1215,7 +1215,7 @@
         }
 
         function fetchAllUsers() {
-            const url = 'https://backend-main-les8.onrender.com/user/active/get';
+            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/user/active/get';
 
             // Show loading overlay
             document.body.insertAdjacentHTML(
