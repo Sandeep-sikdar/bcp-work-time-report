@@ -63,7 +63,14 @@ class CRestCurrent extends CRest
 	
 		// Generate JavaScript to save the new settings to local storage
 		echo "<script>
-			localStorage.setItem('access_token', '" . htmlspecialchars($data['AUTH_ID']) . "');
+		const authData = {
+			access_token: '" . htmlspecialchars($data['AUTH_ID']) . "',
+			domain: '" . htmlspecialchars($data['DOMAIN']) . "',
+			refresh_token: '" . htmlspecialchars($data['REFRESH_ID']) . "',
+			application_token: '" . htmlspecialchars($data['APP_SID']) . "',
+			client_endpoint: 'https://" . htmlspecialchars($_REQUEST['DOMAIN']) . "/rest/'
+		};
+		localStorage.setItem('auth_data', JSON.stringify(authData));
 		</script>";
 	}	
 }
