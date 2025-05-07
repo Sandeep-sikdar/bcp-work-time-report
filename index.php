@@ -1382,57 +1382,115 @@
         // Function to display report
         function displayReport(report, resultContainerId) {
             let output = "";
+            let outputGrouped = "";
             let employee = "";
             let project = "";
             let grouped = "";
-            output = `<h1 style='font-size: 24px; margin-bottom: 16px;position: sticky;top:0%;'>Work Report from ${document.getElementById("dateStart").value} to ${document.getElementById("dateFinish").value}</h1>`;
 
-            currentReport = report;
+            output = `<h1 style='font-size: 24px; margin-bottom: 16px;position: sticky;top:0%;'>Work Report from ${document.getElementById("dateStart").value} to ${document.getElementById("dateFinish").value}</h1>`;
+            outputGrouped = `<h1 style='font-size: 24px; margin-bottom: 16px;position: sticky;top:0%;'>Work Report from ${document.getElementById("dateStart").value} to ${document.getElementById("dateFinish").value}</h1>`;
+
             if (report.length > 0) {
                 report.forEach(user => {
-                    output += `<div>         
-                <h2 style='font-weight: bold; font-size: 20px; margin-bottom: 16px;'>${user.name}</h2>   
-                <table class="TableToExport" style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 18px; text-align: left; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">   
-                    <thead>
-                        <tr style="background-color: #007BFF; color: white;">
-                            <th style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>Created Date</th>
-                            <th style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>Group</th>
-                            <th style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>Task Title</th>
-                            <th style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>Creator</th>
-                            <th style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>Status</th>
-                            <th style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>Tags</th>
-                            <th style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>Duration</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+                    // --------------------- DAILY SPLIT TABLE ------------------------
+                    output += `<div>
+                        <h2 style='font-weight: bold; font-size: 20px; margin-bottom: 16px;'>${user.name}</h2>
+                        <table class="TableToExport" style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 18px; text-align: left; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+                            <thead>
+                                <tr style="background-color: #007BFF; color: white;">
+                                    <th style='padding: 12px 15px;'>Created Date</th>
+                                    <th style='padding: 12px 15px;'>Group</th>
+                                    <th style='padding: 12px 15px;'>Task Title</th>
+                                    <th style='padding: 12px 15px;'>Creator</th>
+                                    <th style='padding: 12px 15px;'>Status</th>
+                                    <th style='padding: 12px 15px;'>Tags</th>
+                                    <th style='padding: 12px 15px;'>Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
 
+                    const tasksByDate = {};
                     user.tasks.forEach(task => {
-                        output += `<tr style="background-color: #f2f2f2;">
-                    <td style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>${task.createdDate ? trimDate(task.createdDate) : ''}</td>
-                    <td style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>${task.group && task.group.name ? task.group.name : ''}</td>
-                    <td style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>${task.title || ''}</td>
-                    <td style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>${task.creator && task.creator.name ? task.creator.name : ''}</td>
-                    <td style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>${task.status !== undefined ? (statusLabels[task.status] || "Unknown") : ''}</td>
-                    <td style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>${task.tags ? displayTags(task.tags) : ''}</td>
-                    <td style='padding: 12px 15px; border-bottom: 1px solid #ddd;'>${task.duration !== undefined ? convertSecondsToTime(parseInt(task.duration)) : ''}</td>
-                </tr>`;
+                        const dateKey = task.createdDate ? trimDate(task.createdDate) : 'Unknown';
+                        if (!tasksByDate[dateKey]) {
+                            tasksByDate[dateKey] = [];
+                        }
+                        tasksByDate[dateKey].push(task);
                     });
 
-                    output += `<tr>
-                <td colSpan='6' style='padding: 12px 15px; border-bottom: 1px solid #ddd; font-weight: bold;'>Total Time Taken</td>
-                <td style='padding: 12px 15px; border-bottom: 1px solid #ddd; font-weight: bold;'>${convertSecondsToTime(calculateTotalDuration(user.tasks))}</td>
-                </tr>
-                </tbody>
-                </table>
-                </div>`;
+                    const sortedDates = Object.keys(tasksByDate).sort();
+                    let overallTotalDuration = 0;
+
+                    sortedDates.forEach(date => {
+                        const dailyTasks = tasksByDate[date];
+                        const dailyTotalDuration = calculateTotalDuration(dailyTasks);
+                        overallTotalDuration += dailyTotalDuration;
+
+                        dailyTasks.forEach(task => {
+                            output += `<tr style="background-color: #f9f9f9;">
+                                <td style='padding: 12px 15px;'>${trimDate(task.createdDate)}</td>
+                                <td style='padding: 12px 15px;'>${task.group?.name || ''}</td>
+                                <td style='padding: 12px 15px;'>
+                                    <a href="https://${task.creator.icon.match(/^https:\/\/([^/]+)/)?.[1]}/company/personal/user/${user.id}/tasks/task/view/${task.taskId}/" target="_blank" style="color:rgb(0, 0, 0); text-decoration: none;">${task.title || ''}</a>
+                                </td>
+                                <td style='padding: 12px 15px;'>${task.creator?.name || ''}</td>
+                                <td style='padding: 12px 15px;'>${task.status !== undefined ? (statusLabels[task.status] || "Unknown") : ''}</td>
+                                <td style='padding: 12px 15px;'>${task.tags ? displayTags(task.tags) : ''}</td>
+                                <td style='padding: 12px 15px;'>${convertSecondsToTime(task.duration)}</td>
+                            </tr>`;
+                        });
+
+                        output += `<tr style="background-color: #e6e6e6; font-weight: bold;">
+                            <td colspan="6" style='padding: 12px 15px;'>Daily Total (${date})</td>
+                            <td style='padding: 12px 15px;'>${convertSecondsToTime(dailyTotalDuration)}</td>
+                        </tr>`;
+                    });
+
+                    output += `<tr style="background-color: #ccc; font-weight: bold;">
+                        <td colspan="6" style='padding: 12px 15px;'>Total Time Taken</td>
+                        <td style='padding: 12px 15px;'>${convertSecondsToTime(overallTotalDuration)}</td>
+                    </tr>`;
+
+                    output += `</tbody></table></div>`;
+
+                    // --------------------- GROUPED TABLE ------------------------
+                    outputGrouped += `<div>
+                        <h2 style='font-weight: bold; font-size: 20px; margin-bottom: 16px;'>${user.name}</h2>
+                        <table class="TableToExport" style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 18px; text-align: left; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+                            <thead>
+                                <tr style="background-color: #007BFF; color: white;">
+                                    <th style='padding: 12px 15px;'>Created Date</th>
+                                    <th style='padding: 12px 15px;'>Group</th>
+                                    <th style='padding: 12px 15px;'>Task Title</th>
+                                    <th style='padding: 12px 15px;'>Creator</th>
+                                    <th style='padding: 12px 15px;'>Status</th>
+                                    <th style='padding: 12px 15px;'>Tags</th>
+                                    <th style='padding: 12px 15px;'>Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                    user.tasks.forEach(task => {
+                        outputGrouped += `<tr style="background-color: #f2f2f2;">
+                            <td style='padding: 12px 15px;'>${trimDate(task.createdDate)}</td>
+                            <td style='padding: 12px 15px;'>${task.group?.name || ''}</td>
+                            <td style='padding: 12px 15px;'><a href="https://${task.creator.icon.match(/^https:\/\/([^/]+)/)?.[1]}/company/personal/user/${user.id}/tasks/task/view/${task.taskId}/" target="_blank" style="color:rgb(0, 0, 0); text-decoration: none;">${task.title || ''}</a></td>
+                            <td style='padding: 12px 15px;'>${task.creator?.name || ''}</td>
+                            <td style='padding: 12px 15px;'>${task.status !== undefined ? (statusLabels[task.status] || "Unknown") : ''}</td>
+                            <td style='padding: 12px 15px;'>${task.tags ? displayTags(task.tags) : ''}</td>
+                            <td style='padding: 12px 15px;'>${convertSecondsToTime(task.duration)}</td>
+                        </tr>`;
+                    });
+
+                    outputGrouped += `<tr style="font-weight: bold; background-color: #e0e0e0;">
+                        <td colspan="6" style='padding: 12px 15px;'>Total Time Taken</td>
+                        <td style='padding: 12px 15px;'>${convertSecondsToTime(calculateTotalDuration(user.tasks))}</td>
+                    </tr></tbody></table></div>`;
                 });
 
-                // Calculate grand total duration
-                const grandTotalDuration = report.reduce((grandTotal, user) => {
-                    return grandTotal + calculateTotalDuration(user.tasks);
-                }, 0);
-
-                output += `<h2 style='font-weight: bold; font-size: 24px; margin-top: 32px;'>Grand Total Time Taken: ${convertSecondsToTime(parseInt(grandTotalDuration))}</h2>`;
+                const grandTotalDuration = report.reduce((total, user) => total + calculateTotalDuration(user.tasks), 0);
+                output += `<h2 style='font-weight: bold; font-size: 24px; margin-top: 32px;'>Grand Total Time Taken: ${convertSecondsToTime(grandTotalDuration)}</h2>`;
+                outputGrouped += `<h2 style='font-weight: bold; font-size: 24px; margin-top: 32px;'>Grand Total Time Taken: ${convertSecondsToTime(grandTotalDuration)}</h2>`;
                 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                 // Unique usernames and total time taken
@@ -1590,18 +1648,21 @@
                 grouped += `<h2 style='font-weight: bold; font-size: 24px; margin-top: 32px;'>Grand Total Time Taken: ${convertSecondsToTime(grandTotalDurationGrouped)}</h2>`;
 
                 currentReport = output;
+                currentReportGroup = outputGrouped;
                 employeeWise = employee;
                 projectWise = project;
                 projectGroupedWise = grouped;
-                output += `<button onclick="downloadReport(currentReport, employeeWise, projectWise, projectGroupedWise)" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download as XLS</button>`;
+                output += `<button onclick="downloadReport(currentReport, employeeWise, projectWise, projectGroupedWise)" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Report</button>`;
+                outputGrouped += `<button onclick="downloadReport(currentReportGroup, employeeWise, projectWise, projectGroupedWise)" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Grouped Report</button>`;
             } else {
                 output += "<div>No data available</div>";
+                outputGrouped += "<div>No data available</div>";
             }
 
             if (resultContainerId == "#detailedResult") {
                 document.getElementById("detailedResult").innerHTML = output;
             } else {
-                document.getElementById("groupedResult").innerHTML = output;
+                document.getElementById("groupedResult").innerHTML = outputGrouped;
             }
         }
 
