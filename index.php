@@ -1123,8 +1123,8 @@
                     // console.log(response);
                     // console.log(response.finalDailyData);
                     // console.log(response.finalWeeklyData);
-                    displayReport(response.finalDailyData, detailedContainerId);
                     displayReport(response.finalWeeklyData, groupedContainerId);
+                    displayReport(response.finalDailyData, detailedContainerId);
                 }).fail(function(jqXHR, textStatus, errorThrown) {
                     console.error('Error:', textStatus, errorThrown);
                     // Remove loading overlay on error
