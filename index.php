@@ -394,50 +394,69 @@
         }
 
         .toggle {
-            width: 75px;
+            width: 85px;
             height: 30px;
             background: #ddd;
-            /* position: absolute; */
-            top: 50%;
-            left: 50%;
-            margin: 25px 0px;
-            border-radius: 8px;
-            box-shadow: inset -3px -2px 6px 0px rgb(0 0 0 / 23%);
-            /* transform: translate(-50%, -50%); */
-            transition: .01s ease;
+            border-radius: 15px;
+            position: relative;
+            margin: 0;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
 
-        .toggle .in-toggle input {
-            position: relative;
+        .toggle.clicked {
+            background: #007BFF;
+        }
+
+        .toggle p {
             width: 100%;
-            height: 100%;
-            cursor: pointer;
-            opacity: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
             margin: 0;
             z-index: 1;
+            pointer-events: none;
+            line-height: 30px;
         }
 
-        .clicked {
-            background: #007BFF;
-            box-shadow: inset -3px -3px 5px 0px rgb(0 59 255);
+        .toggle.clicked p {
+            color: #fff;
         }
 
         .in-toggle {
-            width: 44%;
-            height: 87%;
-            border-radius: 8px;
+            position: absolute;
+            width: 40px;
+            height: 24px;
             background: #fff;
-            position: relative;
-            top: -142%;
-            transition: .01s ease;
+            border-radius: 12px;
+            top: 3px;
+            transition: left 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 2;
         }
 
         .tg-left {
-            left: 2%;
+            left: 3px;
         }
 
         .tg-right {
-            left: 52%;
+            left: 42px;
+        }
+
+        .in-toggle input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 3;
+            margin: 0;
         }
 
         .fields {
@@ -478,6 +497,150 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
+        /* Tags Dropdown Styles */
+        .tags-dropdown-container {
+            position: relative;
+            display: inline-block;
+            margin-left: 20px;
+            vertical-align: middle;
+        }
+
+        .tags-dropdown-header {
+            padding: 8px 15px;
+            background: rgba(244, 244, 249, 0.95);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+            min-width: 150px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-box {
+            background: rgba(244, 244, 249, 0.95);
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            width: fit-content;
+        }
+
+        .tags-dropdown-header:after {
+            content: '▼';
+            font-size: 10px;
+            margin-left: 10px;
+            color: #888;
+        }
+
+        .tags-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            top: 100%;
+            margin-top: 5px;
+        }
+
+        .tags-dropdown-content label {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            font-weight: normal;
+            color: #333;
+            margin: 0;
+            border: none !important;
+        }
+
+        .tags-dropdown-content label:hover {
+            background-color: #f1f1f1;
+        }
+
+        .tags-dropdown-content input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .report-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+            background: rgba(244, 244, 249, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tag Input Styles */
+        .tag-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+            cursor: text;
+            min-height: 38px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .tag-input-container:focus-within {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .tag-item {
+            display: flex;
+            align-items: center;
+            background: #e7f3ff;
+            color: #007bff;
+            padding: 2px 10px;
+            margin: 2px;
+            border: 1px solid #b3d7ff;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            user-select: none;
+        }
+
+        .tag-item .remove-tag {
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            color: #80bdff;
+        }
+
+        .tag-item .remove-tag:hover {
+            color: #007bff;
+        }
+
+        .tag-input-container input {
+            border: none !important;
+            outline: none !important;
+            flex-grow: 1;
+            padding: 4px 0 !important;
+            margin: 0 !important;
+            min-width: 60px;
+            background: transparent;
+            box-shadow: none !important;
+        }
     </style>
 </head>
 
@@ -485,7 +648,6 @@
     <?php
     session_start();
     require_once(__DIR__ . '/crestcurrent.php');
-
     // Save auth data if available
     if (!empty($_REQUEST['AUTH_ID']) && !empty($_REQUEST['DOMAIN']) && !empty($_REQUEST['REFRESH_ID']) && !empty($_REQUEST['APP_SID'])) {
         $_SESSION['auth_data'] = [
@@ -508,14 +670,17 @@
     // getting the settings data
     $settings = json_decode(file_get_contents(__DIR__ . '/settings.json'), true);
     ?>
-    <h1 style="margin:0;">Work Time Report</h1>
+<h1 style="margin:0;">Work Time Report</h1>
     <!-- <?php echo htmlspecialchars($settings['access_token']); ?> -->
 
     <form id="myForm" method="POST">
         <div class="commonFields">
             <div class="fields">
-                <label for="responsible">Users: <span style="color: black;font-size: 15px;font-family: none;">(includes all members of task who time tracked)</span></label>
-                <input type="text" id="search-employees" placeholder="Search responsible..." onkeyup="filterEmployees()">
+                <label for="search-employees">Users: <span
+                        style="color: black;font-size: 15px;font-family: none;">(includes
+                        all members of task who time tracked)</span></label>
+                <input type="text" id="search-employees" placeholder="Search responsible..."
+                    oninput="filterEmployees()">
                 <div id="employee-list" style="user-select: none;">
                     <div id="employee-selected"></div>
                     <div id="employee-content" class="hidden"></div>
@@ -528,8 +693,8 @@
             </div>
 
             <div class="fields">
-                <label for="creator">Creator:</label>
-                <input type="text" id="search-creators" placeholder="Search creator..." onkeyup="filterCreators()">
+                <label for="search-creators">Creator:</label>
+                <input type="text" id="search-creators" placeholder="Search creator..." oninput="filterCreators()">
                 <div id="creator-list" style="user-select: none;">
                     <div id="creator-selected"></div>
                     <div id="creator-content" class="hidden"></div>
@@ -542,8 +707,8 @@
             </div>
 
             <div class="fields">
-                <label for="project">Project:</label>
-                <input type="text" id="search-projects" placeholder="Search project..." onkeyup="filterProjects()">
+                <label for="search-projects">Project:</label>
+                <input type="text" id="search-projects" placeholder="Search project..." oninput="filterProjects()">
                 <div id="project-list" style="user-select: none;">
                     <div id="project-selected"></div>
                     <div id="project-content" class="hidden"></div>
@@ -558,11 +723,13 @@
                 <div style="width: 50%;">
                     <div id="singleDate" class="hidden">
                         <label for="dateStart">Date Start:</label>
-                        <input type="text" id="dateStart" name="dateStart" value="<?php echo htmlspecialchars($_GET['dateStart'] ?? ''); ?>"><br>
+                        <input type="text" id="dateStart" name="dateStart"
+                            value="<?php echo htmlspecialchars($_GET['dateStart'] ?? ''); ?>"><br>
                     </div>
                     <div id="bothDate" class="hidden">
                         <label for="dateFinish">Date Finish:</label>
-                        <input type="text" id="dateFinish" name="dateFinish" value="<?php echo htmlspecialchars($_GET['dateFinish'] ?? ''); ?>"><br>
+                        <input type="text" id="dateFinish" name="dateFinish"
+                            value="<?php echo htmlspecialchars($_GET['dateFinish'] ?? ''); ?>"><br>
                     </div>
                     <Label for="dates">Date:</Label>&nbsp;&nbsp;&nbsp;
                     <input type="radio" id="Today" name="quickDate" value="Today" checked>
@@ -574,8 +741,14 @@
                     <input type="text" id="dates" name="datefilter" value="" />
                 </div>
                 <div style="width: 50%;">
-                    <label for="tags">Tags:</label>
-                    <input type="text" id="tags" name="tags" value="<?php echo htmlspecialchars($_GET['tags'] ?? ''); ?>"><br>
+                    <label for="tags-proxy">Tags:</label>
+                    <div class="tag-input-container" id="tagInputWrapper">
+                        <!-- Tags will be added here -->
+                        <input type="text" id="tags-proxy" placeholder="Type tag and press comma...">
+                    </div>
+                    <!-- Hidden input to maintain compatibility with existing logic -->
+                    <input type="hidden" id="tags" name="tags"
+                        value="<?php echo htmlspecialchars($_GET['tags'] ?? ''); ?>">
                 </div>
             </div>
         </div>
@@ -593,14 +766,71 @@
     </div>
 
     <div id="reportSpace" class="hidden">
-        <div class="container" style="position: sticky; top: 1%;z-index:999;">
-            <div class="toggle">
-                <p style="font-size: 16px;/* margin-top: 50px; */padding-top: 3px;">&nbsp;&nbsp;<span style="color:white;">On</span>&nbsp;&nbsp;&nbsp;Off</p>
-                <div class="in-toggle tg-left">
-                    <input type="checkbox" id="switch" />
+        <div class="container"
+            style="position: sticky; top: 1%; z-index: 999; display: flex; gap: 15px; align-items: center; background: white; padding: 10px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); justify-content: space-between; width: 100%; box-sizing: border-box;">
+
+            <!-- All Filters Container -->
+            <div style="display: flex; gap: 20px; align-items: center;">
+
+                <!-- Task Grouping Container -->
+                <div class="filter-box">
+                    <div class="toggle" id="taskGroupingToggle">
+                        <p><span>off</span><span>on</span></p>
+                        <div class="in-toggle tg-right">
+                            <input type="checkbox" id="switch" />
+                        </div>
+                    </div>
+                    <p style="margin: 0 0 0 10px; font-weight: bold; color: #333;">Task Grouping</p>
+                </div>
+
+                <!-- Tags Dropdown Container -->
+                <div class="tags-dropdown-container" style="margin: 0;">
+                    <div class="tags-dropdown-header" id="tagsDropdownHeader">
+                        <span>Filter by Tags</span>
+                    </div>
+                    <div class="tags-dropdown-content" id="tagsDropdownContent">
+                        <label>
+                            <input type="checkbox" id="showAllTags" checked> Show All
+                        </label>
+                        <hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;">
+                        <div id="tagsListContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Group Dropdown Container -->
+                <div class="tags-dropdown-container" style="margin: 0;">
+                    <div class="tags-dropdown-header" id="groupsDropdownHeader">
+                        <span>Filter by Group</span>
+                    </div>
+                    <div class="tags-dropdown-content" id="groupsDropdownContent">
+                        <label>
+                            <input type="checkbox" id="showAllGroups" checked> Show All
+                        </label>
+                        <hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;">
+                        <div id="groupsListContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Status Dropdown Container -->
+                <div class="tags-dropdown-container" style="margin: 0;">
+                    <div class="tags-dropdown-header" id="statusesDropdownHeader">
+                        <span>Filter by Status</span>
+                    </div>
+                    <div class="tags-dropdown-content" id="statusesDropdownContent">
+                        <label>
+                            <input type="checkbox" id="showAllStatuses" checked> Show All
+                        </label>
+                        <hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;">
+                        <div id="statusesListContainer"></div>
+                    </div>
                 </div>
             </div>
-            <p style="margin-top: -52px;margin-left: 82px;">Task Grouping</p>
+
+            <!-- Report Title Container -->
+            <div id="reportTitle"
+                style="font-weight: bold; font-size: 18px; color: #333; margin: 0; padding: 5px 15px; border-left: 2px solid #007bff; white-space: nowrap;">
+                <!-- Title populated by JS -->
+            </div>
         </div>
 
         <div id="detailedResult">
@@ -618,7 +848,9 @@
         <!-- master sheet will be displayed here -->
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
@@ -628,10 +860,15 @@
         let users = {};
         let projects = {};
         let currentReport;
+        let currentReportGroup;
         let employeeWise;
         let projectWise;
+        let projectGroupedWise;
+        let originalDailyData = [];
+        let originalWeeklyData = [];
+        let selectedTags = ['all'];
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('input[name="datefilter"]').daterangepicker({
                 autoUpdateInput: false,
                 drops: 'up',
@@ -640,13 +877,13 @@
                 }
             });
 
-            $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+            $('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
                 $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
                 document.getElementById('dateStart').value = picker.startDate.format('MM/DD/YYYY');
                 document.getElementById('dateFinish').value = picker.endDate.format('MM/DD/YYYY');
             });
 
-            $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            $('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
                 $(this).val('');
                 document.getElementById('dateStart').value = '';
                 document.getElementById('dateFinish').value = '';
@@ -656,17 +893,17 @@
             fetchAllProjects();
             // fetchAllDepartments();
             // Handle quick period selection
-            $("input[name='quickPeriod']").change(function() {
+            $("input[name='quickPeriod']").change(function () {
                 setQuickPeriod($(this).val());
             });
             // Handle form submission
-            $("#saveTemplate").click(function(event) {
+            $("#saveTemplate").click(function (event) {
                 event.preventDefault(); // Prevent form submission
-                // console.log('Save Template button pressed');
+                //console.log('Save Template button pressed');
                 saveTemplate();
             });
 
-            $("#generateReport").click(function(event) {
+            $("#generateReport").click(function (event) {
                 event.preventDefault(); // Prevent form submission
                 var dateStart = document.getElementById("dateStart").value;
                 var dateFinish = document.getElementById("dateFinish").value;
@@ -679,7 +916,7 @@
                 generateReport('generateReport', '#detailedResult', '#groupedResult', '#projectGroupedResult');
             });
 
-            $("#masterSheet").click(function(event) {
+            $("#masterSheet").click(function (event) {
                 event.preventDefault(); // Prevent form submission
                 var dateStart = document.getElementById("dateStart").value;
                 var dateFinish = document.getElementById("dateFinish").value;
@@ -711,22 +948,25 @@
             }
         });
 
-        var toggle_btn = $(".toggle .in-toggle input");
-        var i_tg = $(".in-toggle");
-        var toggle = $(".toggle");
+        $(document).on("change", "#switch", function () {
+            const isChecked = $(this).is(":checked");
+            const toggleContainer = $("#taskGroupingToggle");
+            const handle = $(".in-toggle");
 
-        toggle_btn.on("click", clicked);
-
-        function clicked() {
-            if (toggle_btn.is(":checked")) {
-                i_tg.addClass("tg-right");
-
-                toggle.addClass("clicked");
+            if (isChecked) {
+                // Grouping ON -> Handle moves to 'On' (Left)
+                handle.removeClass("tg-right").addClass("tg-left");
+                toggleContainer.addClass("clicked");
+                $("#detailedResult").hide();
+                $("#groupedResult").show();
             } else {
-                i_tg.removeClass("tg-right");
-                toggle.removeClass('clicked');
+                // Grouping OFF -> Handle moves to 'Off' (Right)
+                handle.removeClass("tg-left").addClass("tg-right");
+                toggleContainer.removeClass("clicked");
+                $("#groupedResult").hide();
+                $("#detailedResult").show();
             }
-        }
+        });
 
         function saveTemplate() {
 
@@ -801,7 +1041,7 @@
 
                 // Retrieve and parse the stored template to check correctness
                 const template = JSON.parse(localStorage.getItem("templates"));
-                // console.log(template);
+                //console.log(template);
             }
             displayTemplates();
         }
@@ -813,7 +1053,7 @@
             templateContainer.innerHTML = "";
 
             const data = JSON.parse(localStorage.getItem("templates")) || [];
-            // console.log(data);
+            //console.log(data);
 
             if (data.length > 0) {
                 document.getElementById('templatesHead').style.display = 'block';
@@ -894,18 +1134,7 @@
             }
         }
 
-        document.getElementById("switch").addEventListener("change", () => {
-            const status = this.checked
-            this.checked = !status
 
-            if (this.checked) {
-                document.getElementById("detailedResult").style.display = "none";
-                document.getElementById("groupedResult").style.display = "block";
-            } else {
-                document.getElementById("groupedResult").style.display = "none";
-                document.getElementById("detailedResult").style.display = "block";
-            }
-        })
 
         // Quick Dates selection
         document.addEventListener('DOMContentLoaded', () => {
@@ -967,17 +1196,17 @@
         // The visibility of the selector divs
         document.addEventListener("DOMContentLoaded", () => {
             const inputsAndLists = [{
-                    input: "search-employees",
-                    list: "employee-content"
-                },
-                {
-                    input: "search-creators",
-                    list: "creator-content"
-                },
-                {
-                    input: "search-projects",
-                    list: "project-content"
-                }
+                input: "search-employees",
+                list: "employee-content"
+            },
+            {
+                input: "search-creators",
+                list: "creator-content"
+            },
+            {
+                input: "search-projects",
+                list: "project-content"
+            }
             ];
 
             let currentVisibleList = null; // Keep track of the currently visible list
@@ -989,19 +1218,25 @@
                 const inputElement = document.getElementById(input);
                 const listElement = document.getElementById(list);
 
-                // Show the corresponding list when the input is focused
-                inputElement.addEventListener("focus", () => {
+                // Show the corresponding list when the input is focused or typed in
+                const showList = () => {
                     if (currentVisibleList && currentVisibleList !== listElement) {
                         currentVisibleList.style.display = "none"; // Hide the previous list
                     }
                     listElement.style.display = "block";
                     currentVisibleList = listElement; // Update the currently visible list
-                });
+                };
+
+                inputElement.addEventListener("focus", showList);
+                inputElement.addEventListener("input", showList);
             });
 
             // Click outside to hide all lists
             document.addEventListener("click", (event) => {
-                if (!event.target.closest("input") && !event.target.closest("div")) {
+                // Check if the click was inside any of the search field containers (.fields)
+                const isClickInsideField = event.target.closest('.fields');
+
+                if (!isClickInsideField) {
                     if (currentVisibleList) {
                         currentVisibleList.style.display = "none";
                         currentVisibleList = null;
@@ -1028,12 +1263,14 @@
             document.getElementById("toggleProject").addEventListener("click", () => toggleAll("project"));
         });
 
-        // Function to select all checkboxes in a given container
         function selectAll(containerId, destId) {
             const checkboxes = document.querySelectorAll(`#${containerId} input[type='checkbox']`);
             checkboxes.forEach((checkbox) => {
-                checkbox.checked = true;
-                toggleCheckbox(checkbox, containerId, destId);
+                const parent = checkbox.parentElement;
+                if (parent.style.display !== "none") { // Only select if parent is visible
+                    checkbox.checked = true;
+                    toggleCheckbox(checkbox, containerId, destId);
+                }
             });
         }
         // Function to clear all checkboxes in a given container
@@ -1046,22 +1283,19 @@
                 destination.appendChild(label);
             });
         }
-        // Function to toggle checkboxes in a given container
         function toggleAll(containerId) {
             const checkboxes = document.querySelectorAll(`#${containerId}-list input[type='checkbox']`);
             checkboxes.forEach((checkbox) => {
-                if (checkbox.checked) {
-                    checkbox.checked = false;
-                    const destination = document.getElementById(`${containerId}-content`);
-                    const label = checkbox.parentElement;
-                    destination.appendChild(label);
-                } else {
-                    checkbox.checked = true;
-                    const destination = document.getElementById(`${containerId}-selected`);
-                    const label = checkbox.parentElement;
-                    destination.appendChild(label);
+                const parent = checkbox.parentElement;
+                if (parent.style.display !== "none") { // Only toggle if parent is visible
+                    if (checkbox.checked) {
+                        checkbox.checked = false;
+                        document.getElementById(`${containerId}-content`).appendChild(parent);
+                    } else {
+                        checkbox.checked = true;
+                        document.getElementById(`${containerId}-selected`).appendChild(parent);
+                    }
                 }
-
             });
         }
 
@@ -1095,6 +1329,7 @@
             // Build formData object
             const formData = {
                 "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>",
+                "client_endpoint": "<?php echo htmlspecialchars($settings['client_endpoint']); ?>",
                 responsible: responsible, // Send as an array
                 creator: creator, // Send as an array
                 project: project, // Send as an array
@@ -1103,7 +1338,7 @@
                 endDate: dateFinish,
             };
 
-            // console.log("Form Data of Search:", formData);
+            //console.log("Form Data of Search:", formData);
 
             // Define the API URL
             const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/report/';
@@ -1113,31 +1348,39 @@
 
             if (reportType == "generateReport") {
                 // Send data to the backend using POST
-                $.post(url, formData, function(response) {
+                $.post(url, formData, function (response) {
                     // Remove loading overlay and display the report
                     $(".loading-overlay").remove();
                     document.getElementById('reportSpace').style.display = 'block';
                     document.getElementById('masterReport').style.display = 'none';
 
                     //---------------------                
-                    // console.log(response);
-                    // console.log(response.finalDailyData);
-                    // console.log(response.finalWeeklyData);
-                    displayReport(response.finalWeeklyData, groupedContainerId);
-                    displayReport(response.finalDailyData, detailedContainerId);
-                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    //console.log(response);
+                    //console.log(response.finalDailyData);
+                    //console.log(response.finalWeeklyData);
+
+                    originalDailyData = response.finalDailyData;
+                    originalWeeklyData = response.finalWeeklyData;
+
+                    populateTagsDropdown(originalDailyData);
+                    populateGroupsDropdown(originalDailyData);
+                    populateStatusesDropdown(originalDailyData);
+
+                    displayReport(originalWeeklyData, groupedContainerId);
+                    displayReport(originalDailyData, detailedContainerId);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
                     console.error('Error:', textStatus, errorThrown);
                     // Remove loading overlay on error
                     $(".loading-overlay").remove();
                     $(resultContainerId).html("<div class='error'>Error loading report. Please try again.</div>");
                 });
             } else if (reportType == "masterReport") {
-                $.post(url, formData, function(response) {
+                $.post(url, formData, function (response) {
                     $(".loading-overlay").remove();
                     document.getElementById('masterReport').style.display = 'block';
                     document.getElementById('reportSpace').style.display = 'none';
                     displayReportMaster(response.finalWeeklyData, masterSheet);
-                }).fail(function(jqXHR, textStatus, errorThrown) {
+                }).fail(function (jqXHR, textStatus, errorThrown) {
                     console.error('Error:', textStatus, errorThrown);
                     // Remove loading overlay on error
                     $(".loading-overlay").remove();
@@ -1162,14 +1405,15 @@
                 type: 'POST', // Use POST for sending data in the body
                 contentType: 'application/json', // Set content type to JSON
                 data: JSON.stringify({
-                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>"
+                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>",
+                    "client_endpoint": "<?php echo htmlspecialchars($settings['client_endpoint']); ?>"
                 }),
-                success: function(response) {
+                success: function (response) {
                     $(".loading-overlay").remove(); // Remove loading overlay
                     const Container = document.getElementById('project-content');
                     renderProject(response, Container);
                 },
-                error: function(jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     console.error('Error:', textStatus, errorThrown);
                     $(".loading-overlay").remove();
                     const container = document.getElementById('project-content');
@@ -1203,7 +1447,7 @@
                         label.appendChild(document.createElement('br'));
 
                         container.appendChild(label);
-                        checkbox.addEventListener('change', function() {
+                        checkbox.addEventListener('change', function () {
                             toggleCheckbox(this, 'project-content', 'project-selected');
                         });
                     }
@@ -1229,16 +1473,17 @@
                 type: 'POST', // Use POST for sending data in the body
                 contentType: 'application/json', // Set content type to JSON
                 data: JSON.stringify({
-                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>"
+                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>",
+                    "client_endpoint": "<?php echo htmlspecialchars($settings['client_endpoint']); ?>"
                 }),
-                success: function(response) {
+                success: function (response) {
                     $(".loading-overlay").remove(); // Remove loading overlay
                     const resContainer = document.getElementById('employee-content');
                     const creContainer = document.getElementById('creator-content');
                     renderResponsible(response, resContainer);
                     renderResponsible(response, creContainer);
                 },
-                error: function(jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     console.error('Error:', textStatus, errorThrown);
                     $(".loading-overlay").remove();
                     const container = document.getElementById('employee-content');
@@ -1279,11 +1524,11 @@
                         // Append the label to the container
                         container.appendChild(label);
                         if (container.id == "employee-content") {
-                            checkbox.addEventListener('change', function() {
+                            checkbox.addEventListener('change', function () {
                                 toggleCheckbox(this, 'employee-content', 'employee-selected');
                             });
                         } else {
-                            checkbox.addEventListener('change', function() {
+                            checkbox.addEventListener('change', function () {
                                 toggleCheckbox(this, 'creator-content', 'creator-selected');
                             });
                         }
@@ -1387,8 +1632,13 @@
             let project = "";
             let grouped = "";
 
-            output = `<h1 style='font-size: 24px; margin-bottom: 16px;position: sticky;top:0%;'>Work Report from ${document.getElementById("dateStart").value} to ${document.getElementById("dateFinish").value}</h1>`;
-            outputGrouped = `<h1 style='font-size: 24px; margin-bottom: 16px;position: sticky;top:0%;'>Work Report from ${document.getElementById("dateStart").value} to ${document.getElementById("dateFinish").value}</h1>`;
+            const titleText = `Work Report from ${document.getElementById("dateStart").value} to ${document.getElementById("dateFinish").value}`;
+            document.getElementById('reportTitle').innerText = titleText;
+
+            // Add title for export (hidden in UI)
+            const exportTitle = `<h1 style="display: none;">${titleText}</h1>`;
+            output = exportTitle;
+            outputGrouped = exportTitle;
 
             if (report.length > 0) {
                 report.forEach(user => {
@@ -1459,7 +1709,6 @@
                         <table class="TableToExport" style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 18px; text-align: left; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
                             <thead>
                                 <tr style="background-color: #007BFF; color: white;">
-                                    <th style='padding: 12px 15px;'>Created Date</th>
                                     <th style='padding: 12px 15px;'>Group</th>
                                     <th style='padding: 12px 15px;'>Task Title</th>
                                     <th style='padding: 12px 15px;'>Creator</th>
@@ -1472,7 +1721,6 @@
 
                     user.tasks.forEach(task => {
                         outputGrouped += `<tr style="background-color: #f2f2f2;">
-                            <td style='padding: 12px 15px;'>${trimDate(task.createdDate)}</td>
                             <td style='padding: 12px 15px;'>${task.group?.name || ''}</td>
                             <td style='padding: 12px 15px;'><a href="https://${task.creator.icon.match(/^https:\/\/([^/]+)/)?.[1]}/company/personal/user/${user.id}/tasks/task/view/${task.taskId}/" target="_blank" style="color:rgb(0, 0, 0); text-decoration: none;">${task.title || ''}</a></td>
                             <td style='padding: 12px 15px;'>${task.creator?.name || ''}</td>
@@ -1483,7 +1731,7 @@
                     });
 
                     outputGrouped += `<tr style="font-weight: bold; background-color: #e0e0e0;">
-                        <td colspan="6" style='padding: 12px 15px;'>Total Time Taken</td>
+                        <td colspan="5" style='padding: 12px 15px;'>Total Time Taken</td>
                         <td style='padding: 12px 15px;'>${convertSecondsToTime(calculateTotalDuration(user.tasks))}</td>
                     </tr></tbody></table></div>`;
                 });
@@ -1630,8 +1878,6 @@
                             </tr>`;
                     });
 
-
-
                     // Add total row for the user
                     grouped += `<tr>
                             <td colspan='5' style='padding: 12px 15px; border-bottom: 1px solid #ddd; font-weight: bold;'>Total Time Taken</td>
@@ -1652,8 +1898,9 @@
                 employeeWise = employee;
                 projectWise = project;
                 projectGroupedWise = grouped;
-                output += `<button onclick="downloadReport(currentReport, employeeWise, projectWise, projectGroupedWise)" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Report</button>`;
-                outputGrouped += `<button onclick="downloadReport(currentReportGroup, employeeWise, projectWise, projectGroupedWise)" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Grouped Report</button>`;
+                //console.log("Final Output:", output);
+                output += `<button onclick="downloadReport(currentReport, employeeWise, projectWise, '')" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Report</button>`;
+                outputGrouped += `<button onclick="downloadReport('', employeeWise, projectWise, projectGroupedWise)" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Grouped Report</button>`;
             } else {
                 output += "<div>No data available</div>";
                 outputGrouped += "<div>No data available</div>";
@@ -1781,15 +2028,16 @@
             return tags.reduce((acc, curr) => acc ? `${acc}, ${curr}` : curr, "");
         }
 
+        // Function to download the report
         function downloadReportMaster(masterHtml) {
             const formData = new FormData();
             formData.append('masterHtml', masterHtml);
 
 
             fetch('download.php', {
-                    method: 'POST',
-                    body: formData,
-                })
+                method: 'POST',
+                body: formData,
+            })
                 .then(response => {
                     if (response.ok) {
                         return response.blob(); // Get the file as a blob
@@ -1815,16 +2063,22 @@
         }
 
         function downloadReport(detailHtml, userTotalsHtml, projectTotalsHtml, projectGroupedHtml) {
-            const formData = new FormData();
-            formData.append('detailHtml', detailHtml);
-            formData.append('userTotalsHtml', userTotalsHtml);
-            formData.append('projectTotalsHtml', projectTotalsHtml);
-            formData.append('projectGroupedHtml', projectGroupedHtml);
+            const payload = {
+                detailHtml,
+                userTotalsHtml,
+                projectTotalsHtml,
+                projectGroupedHtml
+            };
+            //console.log('here we go again :', detailHtml);
 
             fetch('download.php', {
-                    method: 'POST',
-                    body: formData,
-                })
+                method: 'POST',
+                // headers: {
+                // 'Content-Type': 'application/json'
+                // },
+                body: JSON.stringify(payload)
+                // body: formData,
+            })
                 .then(response => {
                     if (response.ok) {
                         return response.blob(); // Get the file as a blob
@@ -1864,6 +2118,252 @@
             const secs = seconds % 60;
             return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
         }
+
+        // --- Unified Filtering Logic ---
+
+        // Dropdown toggle logic
+        function setupDropdown(headerId, contentId) {
+            document.getElementById(headerId).addEventListener('click', function (e) {
+                const content = document.getElementById(contentId);
+                // Close other dropdowns
+                document.querySelectorAll('.tags-dropdown-content').forEach(el => {
+                    if (el.id !== contentId) el.style.display = 'none';
+                });
+                content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                e.stopPropagation();
+            });
+        }
+
+        setupDropdown('tagsDropdownHeader', 'tagsDropdownContent');
+        setupDropdown('groupsDropdownHeader', 'groupsDropdownContent');
+        setupDropdown('statusesDropdownHeader', 'statusesDropdownContent');
+
+        document.addEventListener('click', function () {
+            document.querySelectorAll('.tags-dropdown-content').forEach(el => el.style.display = 'none');
+        });
+
+        document.querySelectorAll('.tags-dropdown-content').forEach(el => {
+            el.addEventListener('click', e => e.stopPropagation());
+        });
+
+        function populateTagsDropdown(data) {
+            const tagsSet = new Set();
+            data.forEach(user => {
+                user.tasks.forEach(task => {
+                    if (task.tags) {
+                        if (Array.isArray(task.tags)) {
+                            task.tags.forEach(tag => tagsSet.add(tag));
+                        } else {
+                            Object.values(task.tags).forEach(tagObj => tagsSet.add(tagObj.title));
+                        }
+                    }
+                });
+            });
+
+            const container = document.getElementById('tagsListContainer');
+            container.innerHTML = '';
+            Array.from(tagsSet).sort().forEach(tag => {
+                createFilterItem(tag, 'tag-checkbox', container);
+            });
+
+            document.getElementById('showAllTags').checked = true;
+            document.getElementById('showAllTags').onchange = function () {
+                handleShowAllChange(this, '.tag-checkbox');
+            };
+        }
+
+        function populateGroupsDropdown(data) {
+            const groupsSet = new Set();
+            data.forEach(user => {
+                user.tasks.forEach(task => {
+                    if (task.group && task.group.name) groupsSet.add(task.group.name);
+                });
+            });
+
+            const container = document.getElementById('groupsListContainer');
+            container.innerHTML = '';
+            Array.from(groupsSet).sort().forEach(group => {
+                createFilterItem(group, 'group-checkbox', container);
+            });
+
+            document.getElementById('showAllGroups').checked = true;
+            document.getElementById('showAllGroups').onchange = function () {
+                handleShowAllChange(this, '.group-checkbox');
+            };
+        }
+
+        function populateStatusesDropdown(data) {
+            const statusesSet = new Set();
+            data.forEach(user => {
+                user.tasks.forEach(task => {
+                    if (task.status !== undefined) {
+                        statusesSet.add(statusLabels[task.status] || "Unknown");
+                    }
+                });
+            });
+
+            const container = document.getElementById('statusesListContainer');
+            container.innerHTML = '';
+            Array.from(statusesSet).sort().forEach(status => {
+                createFilterItem(status, 'status-checkbox', container);
+            });
+
+            document.getElementById('showAllStatuses').checked = true;
+            document.getElementById('showAllStatuses').onchange = function () {
+                handleShowAllChange(this, '.status-checkbox');
+            };
+        }
+
+        function createFilterItem(value, className, container) {
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = className;
+            checkbox.value = value;
+            checkbox.onchange = function () {
+                handleFilterChange(this, className.replace('-checkbox', ''));
+            };
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(' ' + value));
+            container.appendChild(label);
+        }
+
+        function handleShowAllChange(showAllCb, itemClass) {
+            if (showAllCb.checked) {
+                document.querySelectorAll(itemClass).forEach(cb => cb.checked = false);
+            }
+            applyFilters();
+        }
+
+        function handleFilterChange(itemCb, type) {
+            const showAllId = 'showAll' + type.charAt(0).toUpperCase() + type.slice(1) + 's';
+            if (itemCb.checked) {
+                document.getElementById(showAllId).checked = false;
+            } else {
+                const checkedCount = document.querySelectorAll('.' + type + '-checkbox:checked').length;
+                if (checkedCount === 0) {
+                    document.getElementById(showAllId).checked = true;
+                }
+            }
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const showAllTags = document.getElementById('showAllTags').checked;
+            const checkedTags = Array.from(document.querySelectorAll('.tag-checkbox:checked')).map(cb => cb.value);
+
+            const showAllGroups = document.getElementById('showAllGroups').checked;
+            const checkedGroups = Array.from(document.querySelectorAll('.group-checkbox:checked')).map(cb => cb.value);
+
+            const showAllStatuses = document.getElementById('showAllStatuses').checked;
+            const checkedStatuses = Array.from(document.querySelectorAll('.status-checkbox:checked')).map(cb => cb.value);
+
+            let filteredDaily = originalDailyData;
+            let filteredWeekly = originalWeeklyData;
+
+            const filterFn = (task) => {
+                // Tag Filter
+                let matchesTag = showAllTags;
+                if (!showAllTags && checkedTags.length > 0) {
+                    let taskTags = [];
+                    if (task.tags) {
+                        if (Array.isArray(task.tags)) taskTags = task.tags;
+                        else taskTags = Object.values(task.tags).map(t => t.title);
+                    }
+                    matchesTag = taskTags.some(tag => checkedTags.includes(tag));
+                }
+
+                // Group Filter
+                let matchesGroup = showAllGroups;
+                if (!showAllGroups && checkedGroups.length > 0) {
+                    matchesGroup = task.group && checkedGroups.includes(task.group.name);
+                }
+
+                // Status Filter
+                let matchesStatus = showAllStatuses;
+                if (!showAllStatuses && checkedStatuses.length > 0) {
+                    const taskStatusLabel = statusLabels[task.status] || "Unknown";
+                    matchesStatus = checkedStatuses.includes(taskStatusLabel);
+                }
+
+                return matchesTag && matchesGroup && matchesStatus;
+            };
+
+            const processData = (data) => {
+                return data.map(user => {
+                    const filteredTasks = user.tasks.filter(filterFn);
+                    return { ...user, tasks: filteredTasks };
+                }).filter(user => user.tasks.length > 0);
+            };
+
+            filteredDaily = processData(originalDailyData);
+            filteredWeekly = processData(originalWeeklyData);
+
+            displayReport(filteredWeekly, '#groupedResult');
+            displayReport(filteredDaily, '#detailedResult');
+        }
+        // --- Tag Input UI Logic ---
+
+        const tagInputWrapper = document.getElementById('tagInputWrapper');
+        const tagProxyInput = document.getElementById('tags-proxy');
+        const hiddenTagsInput = document.getElementById('tags');
+        let tags = [];
+
+        // Initialize tags if hidden input has value
+        if (hiddenTagsInput.value) {
+            tags = hiddenTagsInput.value.split(',').map(t => t.trim()).filter(t => t);
+            renderTags();
+        }
+
+        tagInputWrapper.addEventListener('click', () => tagProxyInput.focus());
+
+        tagProxyInput.addEventListener('keydown', function (e) {
+            if (e.key === ',' || e.key === 'Enter') {
+                e.preventDefault();
+                const value = this.value.trim();
+                if (value && !tags.includes(value)) {
+                    tags.push(value);
+                    this.value = '';
+                    renderTags();
+                    updateHiddenInput();
+                }
+            } else if (e.key === 'Backspace' && this.value === '' && tags.length > 0) {
+                tags.pop();
+                renderTags();
+                updateHiddenInput();
+            }
+        });
+
+        function renderTags() {
+            // Remove existing tags
+            tagInputWrapper.querySelectorAll('.tag-item').forEach(el => el.remove());
+
+            // Render current tags
+            tags.forEach((tag, index) => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag-item';
+                tagEl.innerHTML = `
+                    <span>${tag}</span>
+                    <span class="remove-tag" onclick="removeTag(${index})">&times;</span>
+                `;
+                tagInputWrapper.insertBefore(tagEl, tagProxyInput);
+            });
+        }
+
+        window.removeTag = function (index) {
+            tags.splice(index, 1);
+            renderTags();
+            updateHiddenInput();
+        };
+
+        function updateHiddenInput() {
+            hiddenTagsInput.value = tags.join(', ');
+            // Trigger any listeners on the hidden input if needed
+            $(hiddenTagsInput).trigger('change');
+            //console.log("Current Tags:", hiddenTagsInput.value);
+        }
+
     </script>
 
 </body>

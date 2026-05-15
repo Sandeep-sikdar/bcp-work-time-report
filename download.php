@@ -64,41 +64,62 @@ function applyProfessionalStyling($sheet) {
     }
 }
 
+header('Content-Type: text/plain');
+// Get raw POST data
+$input = file_get_contents("php://input");
+$data = json_decode($input, true);
+
 // Check if the detailHtml, userTotalsHtml, projectTotalsHtml and projectGroupedHtml are set
-if (isset($_POST['detailHtml']) && isset($_POST['userTotalsHtml']) && isset($_POST['projectTotalsHtml']) && isset($_POST['projectGroupedHtml'])) {
+if (isset($data['detailHtml']) && isset($data['userTotalsHtml']) && isset($data['projectTotalsHtml']) && isset($data['projectGroupedHtml'])) {
     // Get the HTML inputs
-    $detailHtml = $_POST['detailHtml'];
-    $userTotalsHtml = $_POST['userTotalsHtml'];
-    $projectTotalsHtml = $_POST['projectTotalsHtml'];
-    $projectGroupedHtml = $_POST['projectGroupedHtml'];
+    $detailHtml = $data['detailHtml'];
+    $userTotalsHtml = $data['userTotalsHtml'];
+    $projectTotalsHtml = $data['projectTotalsHtml'];
+    $projectGroupedHtml = $data['projectGroupedHtml'];
 
     // Create a new Spreadsheet
     $spreadsheet = new Spreadsheet();
 
-    // Load detailHtml to the first sheet
+    // Load HTML reader
     $htmlReader = new Html();
     $spreadsheet->removeSheetByIndex(0); // Remove the default sheet
-    $detailSheet = $htmlReader->loadFromString($detailHtml);
-    $spreadsheet->addExternalSheet($detailSheet->getSheet(0), 0);
-    $spreadsheet->getSheet(0)->setTitle('Detail');
-    applyProfessionalStyling($spreadsheet->getSheet(0));
+    $sheetIndex = 0;
 
-    $projectGroupedSheet = $htmlReader->loadFromString($projectGroupedHtml);
-    $spreadsheet->addExternalSheet($projectGroupedSheet->getSheet(0), 1);
-    $spreadsheet->getSheet(1)->setTitle('Project Grouped');
-    applyProfessionalStyling($spreadsheet->getSheet(1));
+    // Load detailHtml if provided
+    if (!empty($detailHtml)) {
+        $detailSheet = $htmlReader->loadFromString($detailHtml);
+        $spreadsheet->addExternalSheet($detailSheet->getSheet(0), $sheetIndex);
+        $spreadsheet->getSheet($sheetIndex)->setTitle('Detail');
+        applyProfessionalStyling($spreadsheet->getSheet($sheetIndex));
+        $sheetIndex++;
+    }
 
-    // Load userTotalsHtml to the second sheet
-    $userTotalsSheet = $htmlReader->loadFromString($userTotalsHtml);
-    $spreadsheet->addExternalSheet($userTotalsSheet->getSheet(0), 2);
-    $spreadsheet->getSheet(2)->setTitle('User Totals');
-    applyProfessionalStyling($spreadsheet->getSheet(2));
+    // Load projectGroupedHtml if provided
+    if (!empty($projectGroupedHtml)) {
+        $projectGroupedSheet = $htmlReader->loadFromString($projectGroupedHtml);
+        $spreadsheet->addExternalSheet($projectGroupedSheet->getSheet(0), $sheetIndex);
+        $spreadsheet->getSheet($sheetIndex)->setTitle('Project Grouped');
+        applyProfessionalStyling($spreadsheet->getSheet($sheetIndex));
+        $sheetIndex++;
+    }
 
-    // Load projectTotalsHtml to the third sheet
-    $projectTotalsSheet = $htmlReader->loadFromString($projectTotalsHtml);
-    $spreadsheet->addExternalSheet($projectTotalsSheet->getSheet(0), 3);
-    $spreadsheet->getSheet(3)->setTitle('Project Totals');
-    applyProfessionalStyling($spreadsheet->getSheet(3));
+    // Load userTotalsHtml if provided
+    if (!empty($userTotalsHtml)) {
+        $userTotalsSheet = $htmlReader->loadFromString($userTotalsHtml);
+        $spreadsheet->addExternalSheet($userTotalsSheet->getSheet(0), $sheetIndex);
+        $spreadsheet->getSheet($sheetIndex)->setTitle('User Totals');
+        applyProfessionalStyling($spreadsheet->getSheet($sheetIndex));
+        $sheetIndex++;
+    }
+
+    // Load projectTotalsHtml if provided
+    if (!empty($projectTotalsHtml)) {
+        $projectTotalsSheet = $htmlReader->loadFromString($projectTotalsHtml);
+        $spreadsheet->addExternalSheet($projectTotalsSheet->getSheet(0), $sheetIndex);
+        $spreadsheet->getSheet($sheetIndex)->setTitle('Project Totals');
+        applyProfessionalStyling($spreadsheet->getSheet($sheetIndex));
+        $sheetIndex++;
+    }
 
     // Set headers to force download
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
