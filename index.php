@@ -2237,13 +2237,16 @@
         }
 
         function handleFilterChange(itemCb, type) {
-            const showAllId = 'showAll' + type.charAt(0).toUpperCase() + type.slice(1) + 's';
+            let showAllId = 'showAll' + type.charAt(0).toUpperCase() + type.slice(1) + 's';
+            if (type === 'status') showAllId = 'showAllStatuses';
+            
+            const showAllCb = document.getElementById(showAllId);
             if (itemCb.checked) {
-                document.getElementById(showAllId).checked = false;
+                if (showAllCb) showAllCb.checked = false;
             } else {
                 const checkedCount = document.querySelectorAll('.' + type + '-checkbox:checked').length;
                 if (checkedCount === 0) {
-                    document.getElementById(showAllId).checked = true;
+                    if (showAllCb) showAllCb.checked = true;
                 }
             }
             applyFilters();
