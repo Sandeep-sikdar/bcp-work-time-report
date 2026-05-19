@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Work Time Report</title>
@@ -669,7 +670,7 @@
     // getting the settings data
     $settings = json_decode(file_get_contents(__DIR__ . '/settings.json'), true);
     ?>
-<h1 style="margin:0;">Work Time Report</h1>
+    <h1 style="margin:0;">Work Time Report</h1>
     <!-- <?php echo htmlspecialchars($settings['access_token']); ?> -->
 
     <form id="myForm" method="POST">
@@ -865,7 +866,22 @@
         let projectGroupedWise;
         let originalDailyData = [];
         let originalWeeklyData = [];
+        let currentFilteredDaily = [];
+        let currentFilteredWeekly = [];
+        let currentMasterReportData = [];
         let selectedTags = ['all'];
+
+        function getFreshToken(callback) {
+            $.getJSON('get_token.php', function(data) {
+                if (data && data.access_token && data.client_endpoint) {
+                    callback(data.access_token, data.client_endpoint);
+                } else {
+                    callback("<?php echo htmlspecialchars($settings['access_token']); ?>", "<?php echo htmlspecialchars($settings['client_endpoint']); ?>");
+                }
+            }).fail(function() {
+                callback("<?php echo htmlspecialchars($settings['access_token']); ?>", "<?php echo htmlspecialchars($settings['client_endpoint']); ?>");
+            });
+        }
 
         $(document).ready(function () {
             $('input[name="datefilter"]').daterangepicker({
@@ -898,7 +914,7 @@
             // Handle form submission
             $("#saveTemplate").click(function (event) {
                 event.preventDefault(); // Prevent form submission
-                //console.log('Save Template button pressed');
+                console.log('Save Template button pressed');
                 saveTemplate();
             });
 
@@ -1040,7 +1056,7 @@
 
                 // Retrieve and parse the stored template to check correctness
                 const template = JSON.parse(localStorage.getItem("templates"));
-                //console.log(template);
+                console.log(template);
             }
             displayTemplates();
         }
@@ -1052,7 +1068,7 @@
             templateContainer.innerHTML = "";
 
             const data = JSON.parse(localStorage.getItem("templates")) || [];
-            //console.log(data);
+            console.log(data);
 
             if (data.length > 0) {
                 document.getElementById('templatesHead').style.display = 'block';
@@ -1325,68 +1341,69 @@
             const dateStart = $("#dateStart").val();
             const dateFinish = $("#dateFinish").val();
 
-            // Build formData object
-            const formData = {
-                "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>",
-                "client_endpoint": "<?php echo htmlspecialchars($settings['client_endpoint']); ?>",
-                responsible: responsible, // Send as an array
-                creator: creator, // Send as an array
-                project: project, // Send as an array
-                tags: tagsArray, // Ensure empty array if no valid tags
-                startDate: dateStart,
-                endDate: dateFinish,
-            };
+            getFreshToken(function(accessToken, clientEndpoint) {
+                // Build formData object
+                const formData = {
+                    "access_token": accessToken,
+                    "client_endpoint": clientEndpoint,
+                    responsible: responsible, // Send as an array
+                    creator: creator, // Send as an array
+                    project: project, // Send as an array
+                    tags: tagsArray, // Ensure empty array if no valid tags
+                    startDate: dateStart,
+                    endDate: dateFinish,
+                };
 
-            //console.log("Form Data of Search:", formData);
+                console.log("Form Data of Search:", formData);
 
-            // Define the API URL
-            const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/report/';
+                // Define the API URL
+                const url = 'https://bcp-work-time-report-backend-gsavdwauaqbwckgr.southeastasia-01.azurewebsites.net/report/';
 
-            // Show loading overlay
-            $("body").append("<div class='loading-overlay'><div class='loading-message'>Searching...</div></div>");
+                // Show loading overlay
+                $("body").append("<div class='loading-overlay'><div class='loading-message'>Searching...</div></div>");
 
-            if (reportType == "generateReport") {
-                // Send data to the backend using POST
-                $.post(url, formData, function (response) {
-                    // Remove loading overlay and display the report
-                    $(".loading-overlay").remove();
-                    document.getElementById('reportSpace').style.display = 'block';
-                    document.getElementById('masterReport').style.display = 'none';
+                if (reportType == "generateReport") {
+                    // Send data to the backend using POST
+                    $.post(url, formData, function (response) {
+                        // Remove loading overlay and display the report
+                        $(".loading-overlay").remove();
+                        document.getElementById('reportSpace').style.display = 'block';
+                        document.getElementById('masterReport').style.display = 'none';
 
-                    //---------------------                
-                    //console.log(response);
-                    //console.log(response.finalDailyData);
-                    //console.log(response.finalWeeklyData);
+                        //---------------------                
+                        console.log(response);
+                        console.log(response.finalDailyData);
+                        console.log(response.finalWeeklyData);
 
-                    originalDailyData = response.finalDailyData;
-                    originalWeeklyData = response.finalWeeklyData;
+                        originalDailyData = response.finalDailyData;
+                        originalWeeklyData = response.finalWeeklyData;
 
-                    populateTagsDropdown(originalDailyData);
-                    populateGroupsDropdown(originalDailyData);
-                    populateStatusesDropdown(originalDailyData);
+                        populateTagsDropdown(originalDailyData);
+                        populateGroupsDropdown(originalDailyData);
+                        populateStatusesDropdown(originalDailyData);
 
-                    displayReport(originalWeeklyData, groupedContainerId);
-                    displayReport(originalDailyData, detailedContainerId);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    console.error('Error:', textStatus, errorThrown);
-                    // Remove loading overlay on error
-                    $(".loading-overlay").remove();
-                    $(resultContainerId).html("<div class='error'>Error loading report. Please try again.</div>");
-                });
-            } else if (reportType == "masterReport") {
-                $.post(url, formData, function (response) {
-                    $(".loading-overlay").remove();
-                    document.getElementById('masterReport').style.display = 'block';
-                    document.getElementById('reportSpace').style.display = 'none';
-                    displayReportMaster(response.finalWeeklyData, masterSheet);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    console.error('Error:', textStatus, errorThrown);
-                    // Remove loading overlay on error
-                    $(".loading-overlay").remove();
-                    $(resultContainerId).html("<div class='error'>Error loading report. Please try again.</div>");
-                });
-            }
-
+                        displayReport(originalWeeklyData, groupedContainerId);
+                        displayReport(originalDailyData, detailedContainerId);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', textStatus, errorThrown);
+                        // Remove loading overlay on error
+                        $(".loading-overlay").remove();
+                        $(resultContainerId).html("<div class='error'>Error loading report. Please try again.</div>");
+                    });
+                } else if (reportType == "masterReport") {
+                    $.post(url, formData, function (response) {
+                        $(".loading-overlay").remove();
+                        document.getElementById('masterReport').style.display = 'block';
+                        document.getElementById('reportSpace').style.display = 'none';
+                        displayReportMaster(response.finalWeeklyData, masterSheet);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', textStatus, errorThrown);
+                        // Remove loading overlay on error
+                        $(".loading-overlay").remove();
+                        $(resultContainerId).html("<div class='error'>Error loading report. Please try again.</div>");
+                    });
+                }
+            });
         }
 
         function fetchAllProjects() {
@@ -1398,26 +1415,28 @@
                 "<div class='loading-overlay'><div class='loading-message'>Loading data...</div></div>"
             );
 
-            // Fetch data using AJAX
-            $.ajax({
-                url: url,
-                type: 'POST', // Use POST for sending data in the body
-                contentType: 'application/json', // Set content type to JSON
-                data: JSON.stringify({
-                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>",
-                    "client_endpoint": "<?php echo htmlspecialchars($settings['client_endpoint']); ?>"
-                }),
-                success: function (response) {
-                    $(".loading-overlay").remove(); // Remove loading overlay
-                    const Container = document.getElementById('project-content');
-                    renderProject(response, Container);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('Error:', textStatus, errorThrown);
-                    $(".loading-overlay").remove();
-                    const container = document.getElementById('project-content');
-                    container.innerHTML = "<p>Error loading employees.</p>";
-                }
+            getFreshToken(function(accessToken, clientEndpoint) {
+                // Fetch data using AJAX
+                $.ajax({
+                    url: url,
+                    type: 'POST', // Use POST for sending data in the body
+                    contentType: 'application/json', // Set content type to JSON
+                    data: JSON.stringify({
+                        "access_token": accessToken,
+                        "client_endpoint": clientEndpoint
+                    }),
+                    success: function (response) {
+                        $(".loading-overlay").remove(); // Remove loading overlay
+                        const Container = document.getElementById('project-content');
+                        renderProject(response, Container);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', textStatus, errorThrown);
+                        $(".loading-overlay").remove();
+                        const container = document.getElementById('project-content');
+                        container.innerHTML = "<p>Error loading employees.</p>";
+                    }
+                });
             });
         }
 
@@ -1466,28 +1485,30 @@
                 "<div class='loading-overlay'><div class='loading-message'>Loading data...</div></div>"
             );
 
-            // Fetch data using AJAX
-            $.ajax({
-                url: url,
-                type: 'POST', // Use POST for sending data in the body
-                contentType: 'application/json', // Set content type to JSON
-                data: JSON.stringify({
-                    "access_token": "<?php echo htmlspecialchars($settings['access_token']); ?>",
-                    "client_endpoint": "<?php echo htmlspecialchars($settings['client_endpoint']); ?>"
-                }),
-                success: function (response) {
-                    $(".loading-overlay").remove(); // Remove loading overlay
-                    const resContainer = document.getElementById('employee-content');
-                    const creContainer = document.getElementById('creator-content');
-                    renderResponsible(response, resContainer);
-                    renderResponsible(response, creContainer);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('Error:', textStatus, errorThrown);
-                    $(".loading-overlay").remove();
-                    const container = document.getElementById('employee-content');
-                    container.innerHTML = "<p>Error loading employees.</p>";
-                }
+            getFreshToken(function(accessToken, clientEndpoint) {
+                // Fetch data using AJAX
+                $.ajax({
+                    url: url,
+                    type: 'POST', // Use POST for sending data in the body
+                    contentType: 'application/json', // Set content type to JSON
+                    data: JSON.stringify({
+                        "access_token": accessToken,
+                        "client_endpoint": clientEndpoint
+                    }),
+                    success: function (response) {
+                        $(".loading-overlay").remove(); // Remove loading overlay
+                        const resContainer = document.getElementById('employee-content');
+                        const creContainer = document.getElementById('creator-content');
+                        renderResponsible(response, resContainer);
+                        renderResponsible(response, creContainer);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', textStatus, errorThrown);
+                        $(".loading-overlay").remove();
+                        const container = document.getElementById('employee-content');
+                        container.innerHTML = "<p>Error loading employees.</p>";
+                    }
+                });
             });
         }
 
@@ -1625,6 +1646,11 @@
 
         // Function to display report
         function displayReport(report, resultContainerId) {
+            if (resultContainerId === '#detailedResult') {
+                currentFilteredDaily = report;
+            } else if (resultContainerId === '#groupedResult') {
+                currentFilteredWeekly = report;
+            }
             let output = "";
             let outputGrouped = "";
             let employee = "";
@@ -1897,9 +1923,9 @@
                 employeeWise = employee;
                 projectWise = project;
                 projectGroupedWise = grouped;
-                //console.log("Final Output:", output);
-                output += `<button onclick="downloadReport(currentReport, employeeWise, projectWise, '')" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Report</button>`;
-                outputGrouped += `<button onclick="downloadReport('', employeeWise, projectWise, projectGroupedWise)" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Grouped Report</button>`;
+                console.log("Final Output:", output);
+                output += `<button id="btnDownloadReport" onclick="downloadReport(currentReport, employeeWise, projectWise, '')" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">Download Report</button>`;
+                outputGrouped += `<button id="btnDownloadGroupedReport" onclick="downloadReport('', employeeWise, projectWise, projectGroupedWise)" style="margin-top: 20px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">Download Grouped Report</button>`;
             } else {
                 output += "<div>No data available</div>";
                 outputGrouped += "<div>No data available</div>";
@@ -1916,6 +1942,7 @@
             let output = `<h1 style='font-size: 24px; margin-bottom: 16px; position: sticky; top: 0%;'>
             Master Sheet for ${document.getElementById("dateStart").value} to ${document.getElementById("dateFinish").value}</h1>`;
             currentReport = report;
+            currentMasterReportData = report;
 
             if (report.length > 0) {
                 // Step 1: Collect all unique group names across all users, including "Non-Grouped Tasks"
@@ -2029,13 +2056,19 @@
 
         // Function to download the report
         function downloadReportMaster(masterHtml) {
-            const formData = new FormData();
-            formData.append('masterHtml', masterHtml);
-
+            const payload = {
+                type: 'master',
+                reportData: currentMasterReportData,
+                dateStart: document.getElementById("dateStart").value,
+                dateFinish: document.getElementById("dateFinish").value
+            };
 
             fetch('download.php', {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload),
             })
                 .then(response => {
                     if (response.ok) {
@@ -2061,22 +2094,108 @@
                 .catch(error => console.error('Error downloading the report:', error));
         }
 
+        function showToast(message) {
+            let toastStyle = document.getElementById('toast-styles');
+            if (!toastStyle) {
+                toastStyle = document.createElement('style');
+                toastStyle.id = 'toast-styles';
+                toastStyle.innerHTML = `
+                    .custom-toast {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: rgba(33, 37, 41, 0.95);
+                        backdrop-filter: blur(8px);
+                        color: #fff;
+                        padding: 16px 24px;
+                        border-radius: 8px;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                        z-index: 99999;
+                        font-family: Arial, sans-serif;
+                        font-size: 15px;
+                        font-weight: 500;
+                        border-left: 4px solid #007BFF;
+                        opacity: 0;
+                        transform: translateY(-20px);
+                        transition: opacity 0.4s ease, transform 0.4s ease;
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                    }
+                    .custom-toast.show {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                    .custom-toast .toast-icon {
+                        width: 10px;
+                        height: 10px;
+                        background-color: #007BFF;
+                        border-radius: 50%;
+                        animation: pulse 1.5s infinite;
+                    }
+                    @keyframes pulse {
+                        0% { transform: scale(0.9); opacity: 1; }
+                        50% { transform: scale(1.4); opacity: 0.4; }
+                        100% { transform: scale(0.9); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(toastStyle);
+            }
+
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.innerHTML = `<span class="toast-icon"></span><span>${message}</span>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 400);
+            }, 4000);
+        }
+
         function downloadReport(detailHtml, userTotalsHtml, projectTotalsHtml, projectGroupedHtml) {
+            const btnId = detailHtml ? "btnDownloadReport" : "btnDownloadGroupedReport";
+            const btn = document.getElementById(btnId);
+            
+            if (btn) {
+                if (btn.disabled) return;
+                
+                showToast("your data is starting downloading");
+                
+                const originalBg = btn.style.backgroundColor;
+                const originalCursor = btn.style.cursor;
+                
+                btn.disabled = true;
+                btn.style.backgroundColor = 'lightblue';
+                btn.style.cursor = 'not-allowed';
+                
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.style.backgroundColor = originalBg;
+                    btn.style.cursor = originalCursor;
+                }, 10000);
+            }
+
             const payload = {
-                detailHtml,
-                userTotalsHtml,
-                projectTotalsHtml,
-                projectGroupedHtml
+                type: detailHtml ? 'detailed' : 'grouped',
+                reportData: detailHtml ? currentFilteredDaily : currentFilteredWeekly,
+                dateStart: document.getElementById("dateStart").value,
+                dateFinish: document.getElementById("dateFinish").value
             };
-            //console.log('here we go again :', detailHtml);
+            console.log('here we go again :', payload.type);
 
             fetch('download.php', {
                 method: 'POST',
-                // headers: {
-                // 'Content-Type': 'application/json'
-                // },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(payload)
-                // body: formData,
             })
                 .then(response => {
                     if (response.ok) {
@@ -2363,7 +2482,7 @@
             hiddenTagsInput.value = tags.join(', ');
             // Trigger any listeners on the hidden input if needed
             $(hiddenTagsInput).trigger('change');
-            //console.log("Current Tags:", hiddenTagsInput.value);
+            console.log("Current Tags:", hiddenTagsInput.value);
         }
 
     </script>
