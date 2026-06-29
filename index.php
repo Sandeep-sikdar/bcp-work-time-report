@@ -670,7 +670,7 @@
     // getting the settings data
     $settings = json_decode(file_get_contents(__DIR__ . '/settings.json'), true);
     ?>
-    <h1 style="margin:0;">Work Time Report</h1>
+    <h1 style="margin:0;">Work Lens</h1>
     <!-- <?php echo htmlspecialchars($settings['access_token']); ?> -->
 
     <form id="myForm" method="POST">
