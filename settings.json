@@ -1,1 +1,8 @@
-{"access_token":"65090c6a0074353b000089f6000002422823073ba00327dcc113758aa4e0243d606021","expires_in":"3600","application_token":"83320ca9c68f4249e504fc2f0a7cd445","refresh_token":"5588336a0074353b000089f600000242282307028eb9f12b9f7d9cfff5209d34521ad7","domain":"bimcap.bitrix24.com","client_endpoint":"https:\/\/bimcap.bitrix24.com\/rest\/"}
+{
+    "access_token": "65090c6a0074353b000089f6000002422823073ba00327dcc113758aa4e0243d606021",
+    "expires_in": "3600",
+    "application_token": "83320ca9c68f4249e504fc2f0a7cd445",
+    "refresh_token": "5588336a0074353b000089f600000242282307028eb9f12b9f7d9cfff5209d34521ad7",
+    "domain": "bimcap.bitrix24.com",
+    "client_endpoint": "https:\/\/bimcap.bitrix24.com\/rest\/"
+}

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Work Time Report</title>
+    <title>Work Lens</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <style>
@@ -2206,6 +2206,12 @@
                 .then(blob => {
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
+
+
+
+
+
+                    
                     a.style.display = 'none';
                     a.href = url;
 
